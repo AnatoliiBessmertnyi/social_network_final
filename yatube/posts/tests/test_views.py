@@ -219,11 +219,13 @@ class CommentTests(TestCase):
 
     def test_authorized_client_comment(self):
         """Авторизированный пользователь может комментировать"""
-        self.authorized_client.post(CommentTests.comment,
-                                    data={'text': 'Тестовый комментарий'}
-                                    )
-        comment = Comment.objects.filter(post=CommentTests.post).last()
-        self.assertEqual(comment.text, 'Тестовый комментарий')
+        text = 'Тестовый комментарий'
+        self.authorized_client.post(
+            CommentTests.comment,
+            data={'text': text}
+        )
+        comment = Comment.objects.last()
+        self.assertEqual(comment.text, text)
         self.assertEqual(comment.post, CommentTests.post)
         self.assertEqual(comment.author, CommentTests.author)
 
@@ -235,11 +237,14 @@ class CommentTests(TestCase):
 
     def test_comment_correct_context(self):
         """Валидная форма Комментария создает запись в Post."""
+        text = 'Тестовый комментарий'
         comments_count = Comment.objects.count()
-        form_data = {'text': 'Тестовый комментарий'}
+        form_data = {'text': text}
         response = self.authorized_client.post(
-            reverse('posts:add_comment', kwargs={'post_id': self.post.pk}),
-            data=form_data,
+            reverse(
+                'posts:add_comment',
+                kwargs={'post_id': self.post.pk}
+            ), data=form_data
         )
         self.assertRedirects(
             response, reverse(
@@ -249,6 +254,6 @@ class CommentTests(TestCase):
         self.assertEqual(Comment.objects.count(), comments_count + 1)
         self.assertTrue(
             Comment.objects.filter(
-                text='Тестовый комментарий'
+                text=text
             ).exists()
         )

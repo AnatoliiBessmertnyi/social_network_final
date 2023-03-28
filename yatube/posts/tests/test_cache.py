@@ -17,12 +17,14 @@ class CacheTests(TestCase):
 
     def test_pages_uses_correct_template(self):
         """Кэширование данных на странице index"""
-        response = self.client.get(reverse('posts:index'))
-        cached_response_content = response.content
+        response_1 = self.client.get(reverse('posts:index'))
+        cached_response_content = response_1.content
         Post.objects.create(
-            text='Второй тестовый пост',
+            text='Второй пост',
             author=self.author,
         )
-        self.assertEqual(cached_response_content, response.content)
+        response_2 = self.client.get(reverse('posts:index'))
+        self.assertEqual(cached_response_content, response_2.content)
         cache.clear()
-        self.assertNotEqual(cached_response_content, response.content)
+        response_3 = self.client.get(reverse('posts:index'))
+        self.assertNotEqual(cached_response_content, response_3.content)
