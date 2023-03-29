@@ -192,7 +192,7 @@ class PostCreateFormTests(TestCase):
         self.assertEqual(obj.image, self.post.image)
 
     def test_image_in_page(self):
-        """Проверяем, что создалась запись с картинкой в БД"""
+        """Проверяем, что создалась запись с картинкой в БД."""
         self.assertTrue(
             Post.objects.filter(
                 text='Тестовый пост',
@@ -218,7 +218,7 @@ class CommentTests(TestCase):
         self.authorized_client.force_login(self.author)
 
     def test_authorized_client_comment(self):
-        """Авторизированный пользователь может комментировать"""
+        """Авторизированный пользователь может комментировать."""
         text = 'Тестовый комментарий'
         self.authorized_client.post(
             CommentTests.comment,
@@ -230,7 +230,7 @@ class CommentTests(TestCase):
         self.assertEqual(comment.author, CommentTests.author)
 
     def test_guest_client_comment(self):
-        """Неавторизированный пользователь не может комментаровать"""
+        """Неавторизированный пользователь не может комментаровать."""
         count_comments = Comment.objects.count()
         self.guest_client.post(CommentTests.comment)
         self.assertEqual(count_comments, Comment.objects.count())

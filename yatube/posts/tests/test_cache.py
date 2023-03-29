@@ -16,9 +16,9 @@ class CacheTests(TestCase):
         )
 
     def test_pages_uses_correct_template(self):
-        """Кэширование данных на странице index"""
-        response_1 = self.client.get(reverse('posts:index'))
-        cached_response_content = response_1.content
+        """Кэширование данных на странице index."""
+        response = self.client.get(reverse('posts:index'))
+        cached_response_content = response.content
         Post.objects.create(
             text='Второй пост',
             author=self.author,
